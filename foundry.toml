@@ -1,0 +1,32 @@
+[profile.default]
+src = "src"
+out = "out"
+libs = ["lib"]
+solc = "0.8.24"
+optimizer = true
+optimizer_runs = 200
+via_ir = true   # needed: swapAndDistribute has many locals, hits stack-depth without via_ir
+evm_version = "paris"  # BSC supports Paris hard fork; avoid Shanghai PUSH0 if RPC outdated
+
+# Test settings
+verbosity = 2
+gas_reports = ["BtcbotRouter"]
+
+# Fork-test setup — BSC mainnet for integration testing against real Pancake + Permit2
+[profile.default.rpc_endpoints]
+bsc       = "${BSC_RPC_HTTP}"
+bsc_test  = "${BSC_TESTNET_RPC_HTTP}"
+
+# Etherscan v2 multi-chain verification (single API key, key in ETHERSCAN_API_KEY).
+# Etherscan v2 supports BSC (56), Polygon (137), Ethereum (1), etc. through one
+# unified API at https://api.etherscan.io/v2/api?chainid=<n>
+[profile.default.etherscan]
+bsc      = { key = "${ETHERSCAN_API_KEY}", chain = 56, url = "https://api.etherscan.io/v2/api?chainid=56" }
+bsc_test = { key = "${ETHERSCAN_API_KEY}", chain = 97, url = "https://api.etherscan.io/v2/api?chainid=97" }
+
+# Formatter
+[fmt]
+line_length = 100
+tab_width = 4
+bracket_spacing = true
+int_types = "long"

@@ -1,0 +1,32 @@
+# Foundry toolchain for compiling + testing BtcbotRouter, plus modern Slither.
+# Built once, mounted at /work for forge build/test/script.
+FROM ghcr.io/foundry-rs/foundry:latest
+
+USER root
+
+# Install Python + pip for Slither (the trailofbits/slither image is on 0.6.1,
+# which lacks Foundry auto-detection — we want ≥0.10.x).
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends python3 python3-pip git \
+    && pip3 install --no-cache-dir slither-analyzer \
+    && rm -rf /var/lib/apt/lists/*
+
+# Pre-install standard libs we use. Using git init + forge install directly
+# (no `forge init` because newer versions removed --no-commit). Libs cached
+# into image so subsequent runs don't re-download.
+WORKDIR /tmp/setup
+RUN git config --global user.email "ci@btcbot.io" \
+    && git config --global user.name "btcbot-ci" \
+    && git init --quiet . \
+    && forge install foundry-rs/forge-std@v1.9.4 \
+    && forge install OpenZeppelin/openzeppelin-contracts@v5.0.2 \
+    && forge install Uniswap/permit2 \
+    && cp -r lib /tmp/forge-libs \
+    && rm -rf /tmp/setup
+
+WORKDIR /work
+
+# On container start: if /work doesn't have lib/, copy our pre-fetched libs in.
+# Idempotent (does nothing on subsequent runs if lib/ already exists).
+ENTRYPOINT ["/bin/sh", "-c", "test -d lib/forge-std || { mkdir -p lib && cp -r /tmp/forge-libs/* lib/; }; exec \"$@\"", "--"]
+CMD ["forge", "test", "-vv"]

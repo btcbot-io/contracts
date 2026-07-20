@@ -1,0 +1,33 @@
+'forge clean' running (wd: /work)
+'forge config --json' running
+Warning: Found unknown `etherscan` config for profile `default` defined in foundry.toml.
+Warning: Found unknown `rpc_endpoints` config for profile `default` defined in foundry.toml.
+'forge build --build-info --skip ./test/** ./script/** --force' running (wd: /work)
+INFO:Detectors:
+Detector: calls-loop
+BtcbotRouter.swapAndDistribute(address,ISignatureTransfer.PermitTransferFrom,bytes,uint256,address[6],uint256[6]) (src/BtcbotRouter.sol#204-297) has external calls inside a loop: (success,ret) = USDT.call(abi.encodeWithSelector(IERC20.transfer.selector,recipient,part)) (src/BtcbotRouter.sol#276-278)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation/#calls-inside-a-loop
+INFO:Detectors:
+Detector: timestamp
+BtcbotRouter.swapAndDistribute(address,ISignatureTransfer.PermitTransferFrom,bytes,uint256,address[6],uint256[6]) (src/BtcbotRouter.sol#204-297) uses timestamp for comparisons
+	Dangerous comparisons:
+	- totalCommission * BPS_DENOMINATOR > usdtOut * MAX_COMMISSION_BPS (src/BtcbotRouter.sol#249)
+	- usdtOut < pancakeMinOut (src/BtcbotRouter.sol#253)
+BtcbotRouter.swapUsdtToBtcb(address,ISignatureTransfer.PermitTransferFrom,bytes,uint256) (src/BtcbotRouter.sol#305-336) uses timestamp for comparisons
+	Dangerous comparisons:
+	- btcbOut < minBtcbOut (src/BtcbotRouter.sol#332)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#block-timestamp
+INFO:Detectors:
+Detector: low-level-calls
+Low level call in BtcbotRouter.swapAndDistribute(address,ISignatureTransfer.PermitTransferFrom,bytes,uint256,address[6],uint256[6]) (src/BtcbotRouter.sol#204-297):
+	- (success,ret) = USDT.call(abi.encodeWithSelector(IERC20.transfer.selector,recipient,part)) (src/BtcbotRouter.sol#276-278)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#low-level-calls
+INFO:Detectors:
+Detector: naming-convention
+Parameter BtcbotRouter.setPaused(bool)._paused (src/BtcbotRouter.sol#377) is not in mixedCase
+Variable BtcbotRouter.BTCB (src/BtcbotRouter.sol#49) is not in mixedCase
+Variable BtcbotRouter.USDT (src/BtcbotRouter.sol#51) is not in mixedCase
+Variable BtcbotRouter.PANCAKE_ROUTER (src/BtcbotRouter.sol#53) is not in mixedCase
+Variable BtcbotRouter.PERMIT2 (src/BtcbotRouter.sol#55) is not in mixedCase
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#conformance-to-solidity-naming-conventions
+INFO:Slither:. analyzed (8 contracts with 101 detectors), 9 result(s) found

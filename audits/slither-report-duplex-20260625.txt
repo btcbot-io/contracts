@@ -1,0 +1,133 @@
+'forge clean' running (wd: /work)
+'forge config --json' running
+Warning: Found unknown `etherscan` config for profile `default` defined in foundry.toml.
+Warning: Found unknown `rpc_endpoints` config for profile `default` defined in foundry.toml.
+'forge build --build-info --skip ./test/** ./script/** --force' running (wd: /work)
+INFO:Detectors:
+Detector: arbitrary-send-erc20
+BtcbotCommissionRouter.swapAndDistribute(address,uint256,uint256,address[6],uint256[6]) (src/BtcbotCommissionRouter.sol#226-308) uses arbitrary from in transferFrom: IERC20(BTCB).safeTransferFrom(user,address(this),amountIn) (src/BtcbotCommissionRouter.sol#236)
+BtcbotCommissionRouter.swapUsdtToBtcb(address,uint256,uint256) (src/BtcbotCommissionRouter.sol#452-480) uses arbitrary from in transferFrom: IERC20(USDT).safeTransferFrom(user,address(this),amountIn) (src/BtcbotCommissionRouter.sol#461)
+BtcbotRouter.swapAndDistribute(address,uint256,uint256,address[6],uint256[6]) (src/BtcbotRouter.sol#206-294) uses arbitrary from in transferFrom: IERC20(BTCB).safeTransferFrom(user,address(this),amountIn) (src/BtcbotRouter.sol#216)
+BtcbotRouter.swapUsdtToBtcb(address,uint256,uint256) (src/BtcbotRouter.sol#302-330) uses arbitrary from in transferFrom: IERC20(USDT).safeTransferFrom(user,address(this),amountIn) (src/BtcbotRouter.sol#311)
+BtcbotRouterDuplex.swapAndDistribute(address,uint256,uint256,address[6],uint256[6],uint256) (src/BtcbotRouterDuplex.sol#240-323) uses arbitrary from in transferFrom: IERC20(BTCB).safeTransferFrom(user,address(this),amountIn) (src/BtcbotRouterDuplex.sol#251)
+BtcbotRouterDuplex.swapUsdtToBtcb(address,uint256,uint256,uint256) (src/BtcbotRouterDuplex.sol#468-497) uses arbitrary from in transferFrom: IERC20(USDT).safeTransferFrom(user,address(this),amountIn) (src/BtcbotRouterDuplex.sol#478)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#arbitrary-from-in-transferfrom
+INFO:Detectors:
+Detector: divide-before-multiply
+BtcbotCommissionRouter.batchSwapAndDistribute(BtcbotCommissionRouter.UserLeg[],uint256) (src/BtcbotCommissionRouter.sol#345-448) performs a multiplication on the result of a division:
+	- userGross = (amt_scope_1 * totalUsdtOut) / totalIn (src/BtcbotCommissionRouter.sol#403)
+	- totalCommission * BPS_DENOMINATOR > userGross * MAX_COMMISSION_BPS (src/BtcbotCommissionRouter.sol#411)
+BtcbotRouterDuplex.batchSwapAndDistribute(BtcbotRouterDuplex.UserLeg[],uint256,uint256) (src/BtcbotRouterDuplex.sol#360-464) performs a multiplication on the result of a division:
+	- userGross = (amt_scope_1 * totalUsdtOut) / totalIn (src/BtcbotRouterDuplex.sol#419)
+	- totalCommission * BPS_DENOMINATOR > userGross * MAX_COMMISSION_BPS (src/BtcbotRouterDuplex.sol#427)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#divide-before-multiply
+INFO:Detectors:
+Detector: uninitialized-local
+BtcbotRouterDuplex.batchSwapAndDistribute(BtcbotRouterDuplex.UserLeg[],uint256,uint256).totalCommission (src/BtcbotRouterDuplex.sol#421) is a local variable never initialized
+BtcbotRouterDuplex.batchSwapAndDistribute(BtcbotRouterDuplex.UserLeg[],uint256,uint256).totalIn (src/BtcbotRouterDuplex.sol#372) is a local variable never initialized
+BtcbotRouterDuplex.batchSwapUsdtToBtcb(BtcbotRouterDuplex.BuyLeg[],uint256,uint256).totalIn (src/BtcbotRouterDuplex.sol#540) is a local variable never initialized
+BtcbotCommissionRouter.batchSwapAndDistribute(BtcbotCommissionRouter.UserLeg[],uint256).totalIn (src/BtcbotCommissionRouter.sol#356) is a local variable never initialized
+BtcbotCommissionRouter.batchSwapAndDistribute(BtcbotCommissionRouter.UserLeg[],uint256).totalCommission (src/BtcbotCommissionRouter.sol#405) is a local variable never initialized
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#uninitialized-local-variables
+INFO:Detectors:
+Detector: calls-loop
+BtcbotCommissionRouter.swapAndDistribute(address,uint256,uint256,address[6],uint256[6]) (src/BtcbotCommissionRouter.sol#226-308) has external calls inside a loop: (success,ret) = USDT.call(abi.encodeWithSelector(IERC20.transfer.selector,recipient,part)) (src/BtcbotCommissionRouter.sol#287-289)
+BtcbotCommissionRouter.batchSwapAndDistribute(BtcbotCommissionRouter.UserLeg[],uint256) (src/BtcbotCommissionRouter.sol#345-448) has external calls inside a loop: (ok,ret) = BTCB.call(abi.encodeWithSelector(IERC20.transferFrom.selector,u,address(this),amt)) (src/BtcbotCommissionRouter.sol#367-369)
+BtcbotCommissionRouter.batchSwapAndDistribute(BtcbotCommissionRouter.UserLeg[],uint256) (src/BtcbotCommissionRouter.sol#345-448) has external calls inside a loop: (s,r) = USDT.call(abi.encodeWithSelector(IERC20.transfer.selector,recipient,part)) (src/BtcbotCommissionRouter.sol#430-432)
+BtcbotRouter.swapAndDistribute(address,uint256,uint256,address[6],uint256[6]) (src/BtcbotRouter.sol#206-294) has external calls inside a loop: (success,ret) = USDT.call(abi.encodeWithSelector(IERC20.transfer.selector,recipient,part)) (src/BtcbotRouter.sol#273-275)
+BtcbotRouterDuplex.swapAndDistribute(address,uint256,uint256,address[6],uint256[6],uint256) (src/BtcbotRouterDuplex.sol#240-323) has external calls inside a loop: (success,ret) = USDT.call(abi.encodeWithSelector(IERC20.transfer.selector,recipient,part)) (src/BtcbotRouterDuplex.sol#302-304)
+BtcbotRouterDuplex.batchSwapAndDistribute(BtcbotRouterDuplex.UserLeg[],uint256,uint256) (src/BtcbotRouterDuplex.sol#360-464) has external calls inside a loop: (ok,ret) = BTCB.call(abi.encodeWithSelector(IERC20.transferFrom.selector,u,address(this),amt)) (src/BtcbotRouterDuplex.sol#383-385)
+BtcbotRouterDuplex.batchSwapAndDistribute(BtcbotRouterDuplex.UserLeg[],uint256,uint256) (src/BtcbotRouterDuplex.sol#360-464) has external calls inside a loop: (s,r) = USDT.call(abi.encodeWithSelector(IERC20.transfer.selector,recipient,part)) (src/BtcbotRouterDuplex.sol#446-448)
+BtcbotRouterDuplex.batchSwapUsdtToBtcb(BtcbotRouterDuplex.BuyLeg[],uint256,uint256) (src/BtcbotRouterDuplex.sol#528-593) has external calls inside a loop: (ok,ret) = USDT.call(abi.encodeWithSelector(IERC20.transferFrom.selector,u,address(this),amt)) (src/BtcbotRouterDuplex.sol#551-553)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation/#calls-inside-a-loop
+INFO:Detectors:
+Detector: timestamp
+BtcbotRouter.swapAndDistribute(address,uint256,uint256,address[6],uint256[6]) (src/BtcbotRouter.sol#206-294) uses timestamp for comparisons
+	Dangerous comparisons:
+	- totalCommission * BPS_DENOMINATOR > usdtOut * MAX_COMMISSION_BPS (src/BtcbotRouter.sol#246)
+	- usdtOut < pancakeMinOut (src/BtcbotRouter.sol#250)
+BtcbotRouter.swapUsdtToBtcb(address,uint256,uint256) (src/BtcbotRouter.sol#302-330) uses timestamp for comparisons
+	Dangerous comparisons:
+	- btcbOut < minBtcbOut (src/BtcbotRouter.sol#326)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#block-timestamp
+INFO:Detectors:
+Detector: assembly
+Address._revert(bytes) (lib/openzeppelin-contracts/contracts/utils/Address.sol#146-158) uses assembly
+	- INLINE ASM (lib/openzeppelin-contracts/contracts/utils/Address.sol#151-154)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#assembly-usage
+INFO:Detectors:
+Detector: pragma
+2 different versions of Solidity are used:
+	- Version constraint ^0.8.20 is used by:
+		-^0.8.20 (lib/openzeppelin-contracts/contracts/token/ERC20/IERC20.sol#4)
+		-^0.8.20 (lib/openzeppelin-contracts/contracts/token/ERC20/extensions/IERC20Permit.sol#4)
+		-^0.8.20 (lib/openzeppelin-contracts/contracts/token/ERC20/utils/SafeERC20.sol#4)
+		-^0.8.20 (lib/openzeppelin-contracts/contracts/utils/Address.sol#4)
+		-^0.8.20 (lib/openzeppelin-contracts/contracts/utils/ReentrancyGuard.sol#4)
+	- Version constraint ^0.8.24 is used by:
+		-^0.8.24 (src/BtcbotCommissionRouter.sol#2)
+		-^0.8.24 (src/BtcbotRouter.sol#2)
+		-^0.8.24 (src/BtcbotRouterDuplex.sol#2)
+		-^0.8.24 (src/interfaces/IPancakeV2Router.sol#2)
+		-^0.8.24 (src/interfaces/IPancakeV3SwapRouter.sol#2)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#different-pragma-directives-are-used
+INFO:Detectors:
+Detector: cyclomatic-complexity
+BtcbotCommissionRouter.batchSwapAndDistribute(BtcbotCommissionRouter.UserLeg[],uint256) (src/BtcbotCommissionRouter.sol#345-448) has a high cyclomatic complexity (17).
+BtcbotRouterDuplex.batchSwapAndDistribute(BtcbotRouterDuplex.UserLeg[],uint256,uint256) (src/BtcbotRouterDuplex.sol#360-464) has a high cyclomatic complexity (17).
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#cyclomatic-complexity
+INFO:Detectors:
+Detector: solc-version
+Version constraint ^0.8.20 contains known severe issues (https://solidity.readthedocs.io/en/latest/bugs.html)
+	- VerbatimInvalidDeduplication
+	- FullInlinerNonExpressionSplitArgumentEvaluationOrder
+	- MissingSideEffectsOnSelectorAccess.
+It is used by:
+	- ^0.8.20 (lib/openzeppelin-contracts/contracts/token/ERC20/IERC20.sol#4)
+	- ^0.8.20 (lib/openzeppelin-contracts/contracts/token/ERC20/extensions/IERC20Permit.sol#4)
+	- ^0.8.20 (lib/openzeppelin-contracts/contracts/token/ERC20/utils/SafeERC20.sol#4)
+	- ^0.8.20 (lib/openzeppelin-contracts/contracts/utils/Address.sol#4)
+	- ^0.8.20 (lib/openzeppelin-contracts/contracts/utils/ReentrancyGuard.sol#4)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#incorrect-versions-of-solidity
+INFO:Detectors:
+Detector: low-level-calls
+Low level call in SafeERC20._callOptionalReturnBool(IERC20,bytes) (lib/openzeppelin-contracts/contracts/token/ERC20/utils/SafeERC20.sol#110-117):
+	- (success,returndata) = address(token).call(data) (lib/openzeppelin-contracts/contracts/token/ERC20/utils/SafeERC20.sol#115)
+Low level call in Address.sendValue(address,uint256) (lib/openzeppelin-contracts/contracts/utils/Address.sol#41-50):
+	- (success,None) = recipient.call{value: amount}() (lib/openzeppelin-contracts/contracts/utils/Address.sol#46)
+Low level call in Address.functionCallWithValue(address,bytes,uint256) (lib/openzeppelin-contracts/contracts/utils/Address.sol#83-89):
+	- (success,returndata) = target.call{value: value}(data) (lib/openzeppelin-contracts/contracts/utils/Address.sol#87)
+Low level call in Address.functionStaticCall(address,bytes) (lib/openzeppelin-contracts/contracts/utils/Address.sol#95-98):
+	- (success,returndata) = target.staticcall(data) (lib/openzeppelin-contracts/contracts/utils/Address.sol#96)
+Low level call in Address.functionDelegateCall(address,bytes) (lib/openzeppelin-contracts/contracts/utils/Address.sol#104-107):
+	- (success,returndata) = target.delegatecall(data) (lib/openzeppelin-contracts/contracts/utils/Address.sol#105)
+Low level call in BtcbotCommissionRouter.swapAndDistribute(address,uint256,uint256,address[6],uint256[6]) (src/BtcbotCommissionRouter.sol#226-308):
+	- (success,ret) = USDT.call(abi.encodeWithSelector(IERC20.transfer.selector,recipient,part)) (src/BtcbotCommissionRouter.sol#287-289)
+Low level call in BtcbotCommissionRouter.batchSwapAndDistribute(BtcbotCommissionRouter.UserLeg[],uint256) (src/BtcbotCommissionRouter.sol#345-448):
+	- (ok,ret) = BTCB.call(abi.encodeWithSelector(IERC20.transferFrom.selector,u,address(this),amt)) (src/BtcbotCommissionRouter.sol#367-369)
+	- (s,r) = USDT.call(abi.encodeWithSelector(IERC20.transfer.selector,recipient,part)) (src/BtcbotCommissionRouter.sol#430-432)
+Low level call in BtcbotRouter.swapAndDistribute(address,uint256,uint256,address[6],uint256[6]) (src/BtcbotRouter.sol#206-294):
+	- (success,ret) = USDT.call(abi.encodeWithSelector(IERC20.transfer.selector,recipient,part)) (src/BtcbotRouter.sol#273-275)
+Low level call in BtcbotRouterDuplex.swapAndDistribute(address,uint256,uint256,address[6],uint256[6],uint256) (src/BtcbotRouterDuplex.sol#240-323):
+	- (success,ret) = USDT.call(abi.encodeWithSelector(IERC20.transfer.selector,recipient,part)) (src/BtcbotRouterDuplex.sol#302-304)
+Low level call in BtcbotRouterDuplex.batchSwapAndDistribute(BtcbotRouterDuplex.UserLeg[],uint256,uint256) (src/BtcbotRouterDuplex.sol#360-464):
+	- (ok,ret) = BTCB.call(abi.encodeWithSelector(IERC20.transferFrom.selector,u,address(this),amt)) (src/BtcbotRouterDuplex.sol#383-385)
+	- (s,r) = USDT.call(abi.encodeWithSelector(IERC20.transfer.selector,recipient,part)) (src/BtcbotRouterDuplex.sol#446-448)
+Low level call in BtcbotRouterDuplex.batchSwapUsdtToBtcb(BtcbotRouterDuplex.BuyLeg[],uint256,uint256) (src/BtcbotRouterDuplex.sol#528-593):
+	- (ok,ret) = USDT.call(abi.encodeWithSelector(IERC20.transferFrom.selector,u,address(this),amt)) (src/BtcbotRouterDuplex.sol#551-553)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#low-level-calls
+INFO:Detectors:
+Detector: naming-convention
+Function IERC20Permit.DOMAIN_SEPARATOR() (lib/openzeppelin-contracts/contracts/token/ERC20/extensions/IERC20Permit.sol#89) is not in mixedCase
+Parameter BtcbotCommissionRouter.setPaused(bool)._paused (src/BtcbotCommissionRouter.sol#529) is not in mixedCase
+Variable BtcbotCommissionRouter.BTCB (src/BtcbotCommissionRouter.sol#83) is not in mixedCase
+Variable BtcbotCommissionRouter.USDT (src/BtcbotCommissionRouter.sol#85) is not in mixedCase
+Parameter BtcbotRouter.setPaused(bool)._paused (src/BtcbotRouter.sol#369) is not in mixedCase
+Variable BtcbotRouter.BTCB (src/BtcbotRouter.sol#61) is not in mixedCase
+Variable BtcbotRouter.USDT (src/BtcbotRouter.sol#63) is not in mixedCase
+Variable BtcbotRouter.PANCAKE_ROUTER (src/BtcbotRouter.sol#65) is not in mixedCase
+Parameter BtcbotRouterDuplex.setPaused(bool)._paused (src/BtcbotRouterDuplex.sol#642) is not in mixedCase
+Variable BtcbotRouterDuplex.BTCB (src/BtcbotRouterDuplex.sol#90) is not in mixedCase
+Variable BtcbotRouterDuplex.USDT (src/BtcbotRouterDuplex.sol#92) is not in mixedCase
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#conformance-to-solidity-naming-conventions
+INFO:Slither:. analyzed (10 contracts with 101 detectors), 50 result(s) found

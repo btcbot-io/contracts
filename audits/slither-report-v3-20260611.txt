@@ -1,0 +1,133 @@
+Unable to find image 'ghcr.io/trailofbits/eth-security-toolbox:nightly' locally
+nightly: Pulling from trailofbits/eth-security-toolbox
+40d16f30db40: Pulling fs layer
+145859d49a12: Pulling fs layer
+afd5987b4490: Pulling fs layer
+ac902e49f12e: Pulling fs layer
+64b65b23127c: Pulling fs layer
+2b2a4051a634: Pulling fs layer
+4f4fb700ef54: Pulling fs layer
+524680ab8524: Pulling fs layer
+eaa35d04153d: Pulling fs layer
+1646116d504c: Pulling fs layer
+9d645e603f2c: Pulling fs layer
+53951891cca6: Pulling fs layer
+8f24f2402df6: Pulling fs layer
+31d822add6fe: Pulling fs layer
+4f4fb700ef54: Waiting
+2b2a4051a634: Waiting
+56ff08142c67: Pulling fs layer
+ac902e49f12e: Waiting
+9d645e603f2c: Waiting
+64b65b23127c: Waiting
+31d822add6fe: Waiting
+53951891cca6: Waiting
+524680ab8524: Waiting
+56ff08142c67: Waiting
+8f24f2402df6: Waiting
+eaa35d04153d: Waiting
+1646116d504c: Waiting
+afd5987b4490: Verifying Checksum
+afd5987b4490: Download complete
+40d16f30db40: Verifying Checksum
+40d16f30db40: Download complete
+64b65b23127c: Verifying Checksum
+64b65b23127c: Download complete
+ac902e49f12e: Verifying Checksum
+ac902e49f12e: Download complete
+2b2a4051a634: Verifying Checksum
+2b2a4051a634: Download complete
+4f4fb700ef54: Verifying Checksum
+4f4fb700ef54: Download complete
+524680ab8524: Download complete
+eaa35d04153d: Verifying Checksum
+eaa35d04153d: Download complete
+9d645e603f2c: Verifying Checksum
+9d645e603f2c: Download complete
+145859d49a12: Verifying Checksum
+145859d49a12: Download complete
+53951891cca6: Verifying Checksum
+53951891cca6: Download complete
+8f24f2402df6: Download complete
+40d16f30db40: Pull complete
+31d822add6fe: Verifying Checksum
+31d822add6fe: Download complete
+56ff08142c67: Download complete
+145859d49a12: Pull complete
+1646116d504c: Verifying Checksum
+1646116d504c: Download complete
+afd5987b4490: Pull complete
+ac902e49f12e: Pull complete
+64b65b23127c: Pull complete
+2b2a4051a634: Pull complete
+4f4fb700ef54: Pull complete
+524680ab8524: Pull complete
+eaa35d04153d: Pull complete
+1646116d504c: Pull complete
+9d645e603f2c: Pull complete
+53951891cca6: Pull complete
+8f24f2402df6: Pull complete
+31d822add6fe: Pull complete
+56ff08142c67: Pull complete
+Digest: sha256:b80b75624b869d8e78ffaa66de99138160305442e0b197f5a8c1b1d9939d7aed
+Status: Downloaded newer image for ghcr.io/trailofbits/eth-security-toolbox:nightly
+Detector: assembly
+Address._revert(bytes) (lib/openzeppelin-contracts/contracts/utils/Address.sol#146-158) uses assembly
+	- INLINE ASM (lib/openzeppelin-contracts/contracts/utils/Address.sol#151-154)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#assembly-usage
+INFO:Detectors:
+Detector: pragma
+2 different versions of Solidity are used:
+	- Version constraint ^0.8.20 is used by:
+		-^0.8.20 (lib/openzeppelin-contracts/contracts/token/ERC20/IERC20.sol#4)
+		-^0.8.20 (lib/openzeppelin-contracts/contracts/token/ERC20/extensions/IERC20Permit.sol#4)
+		-^0.8.20 (lib/openzeppelin-contracts/contracts/token/ERC20/utils/SafeERC20.sol#4)
+		-^0.8.20 (lib/openzeppelin-contracts/contracts/utils/Address.sol#4)
+		-^0.8.20 (lib/openzeppelin-contracts/contracts/utils/ReentrancyGuard.sol#4)
+	- Version constraint ^0.8.24 is used by:
+		-^0.8.24 (src/BtcbotCommissionRouter.sol#2)
+		-^0.8.24 (src/interfaces/IPancakeV3SwapRouter.sol#2)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#different-pragma-directives-are-used
+INFO:Detectors:
+Detector: cyclomatic-complexity
+BtcbotCommissionRouter.batchSwapAndDistribute(BtcbotCommissionRouter.UserLeg[],uint256) (src/BtcbotCommissionRouter.sol#345-448) has a high cyclomatic complexity (17).
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#cyclomatic-complexity
+INFO:Detectors:
+Detector: solc-version
+Version constraint ^0.8.20 contains known severe issues (https://solidity.readthedocs.io/en/latest/bugs.html)
+	- VerbatimInvalidDeduplication
+	- FullInlinerNonExpressionSplitArgumentEvaluationOrder
+	- MissingSideEffectsOnSelectorAccess.
+It is used by:
+	- ^0.8.20 (lib/openzeppelin-contracts/contracts/token/ERC20/IERC20.sol#4)
+	- ^0.8.20 (lib/openzeppelin-contracts/contracts/token/ERC20/extensions/IERC20Permit.sol#4)
+	- ^0.8.20 (lib/openzeppelin-contracts/contracts/token/ERC20/utils/SafeERC20.sol#4)
+	- ^0.8.20 (lib/openzeppelin-contracts/contracts/utils/Address.sol#4)
+	- ^0.8.20 (lib/openzeppelin-contracts/contracts/utils/ReentrancyGuard.sol#4)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#incorrect-versions-of-solidity
+INFO:Detectors:
+Detector: low-level-calls
+Low level call in SafeERC20._callOptionalReturnBool(IERC20,bytes) (lib/openzeppelin-contracts/contracts/token/ERC20/utils/SafeERC20.sol#110-117):
+	- (success,returndata) = address(token).call(data) (lib/openzeppelin-contracts/contracts/token/ERC20/utils/SafeERC20.sol#115)
+Low level call in Address.sendValue(address,uint256) (lib/openzeppelin-contracts/contracts/utils/Address.sol#41-50):
+	- (success,None) = recipient.call{value: amount}() (lib/openzeppelin-contracts/contracts/utils/Address.sol#46)
+Low level call in Address.functionCallWithValue(address,bytes,uint256) (lib/openzeppelin-contracts/contracts/utils/Address.sol#83-89):
+	- (success,returndata) = target.call{value: value}(data) (lib/openzeppelin-contracts/contracts/utils/Address.sol#87)
+Low level call in Address.functionStaticCall(address,bytes) (lib/openzeppelin-contracts/contracts/utils/Address.sol#95-98):
+	- (success,returndata) = target.staticcall(data) (lib/openzeppelin-contracts/contracts/utils/Address.sol#96)
+Low level call in Address.functionDelegateCall(address,bytes) (lib/openzeppelin-contracts/contracts/utils/Address.sol#104-107):
+	- (success,returndata) = target.delegatecall(data) (lib/openzeppelin-contracts/contracts/utils/Address.sol#105)
+Low level call in BtcbotCommissionRouter.swapAndDistribute(address,uint256,uint256,address[6],uint256[6]) (src/BtcbotCommissionRouter.sol#226-308):
+	- (success,ret) = USDT.call(abi.encodeWithSelector(IERC20.transfer.selector,recipient,part)) (src/BtcbotCommissionRouter.sol#287-289)
+Low level call in BtcbotCommissionRouter.batchSwapAndDistribute(BtcbotCommissionRouter.UserLeg[],uint256) (src/BtcbotCommissionRouter.sol#345-448):
+	- (ok,ret) = BTCB.call(abi.encodeWithSelector(IERC20.transferFrom.selector,u,address(this),amt)) (src/BtcbotCommissionRouter.sol#367-369)
+	- (s,r) = USDT.call(abi.encodeWithSelector(IERC20.transfer.selector,recipient,part)) (src/BtcbotCommissionRouter.sol#430-432)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#low-level-calls
+INFO:Detectors:
+Detector: naming-convention
+Function IERC20Permit.DOMAIN_SEPARATOR() (lib/openzeppelin-contracts/contracts/token/ERC20/extensions/IERC20Permit.sol#89) is not in mixedCase
+Parameter BtcbotCommissionRouter.setPaused(bool)._paused (src/BtcbotCommissionRouter.sol#529) is not in mixedCase
+Variable BtcbotCommissionRouter.BTCB (src/BtcbotCommissionRouter.sol#83) is not in mixedCase
+Variable BtcbotCommissionRouter.USDT (src/BtcbotCommissionRouter.sol#85) is not in mixedCase
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#conformance-to-solidity-naming-conventions
+INFO:Slither:src/BtcbotCommissionRouter.sol analyzed (7 contracts with 101 detectors), 23 result(s) found

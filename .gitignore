@@ -1,0 +1,13 @@
+# Foundry build artifacts
+out/
+cache/
+broadcast/
+
+# Foundry-installed deps (we vendor versions explicitly; let `forge install` rebuild)
+lib/forge-std/
+lib/openzeppelin-contracts/
+lib/permit2/
+
+# Local env
+.env
+.env.local
