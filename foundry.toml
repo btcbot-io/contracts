@@ -12,10 +12,12 @@ evm_version = "paris"  # BSC supports Paris hard fork; avoid Shanghai PUSH0 if R
 verbosity = 2
 gas_reports = ["BtcbotRouter"]
 
-# Fork-test setup — BSC mainnet for integration testing against real Pancake + Permit2
+# BNB Smart Chain endpoints — BSC mainnet (chain id 56) is the deployment target;
+# fork tests run against real PancakeSwap + Permit2 on BSC. Public nodes by default
+# so the repo builds standalone; override per-run with --rpc-url/--fork-url if needed.
 [profile.default.rpc_endpoints]
-bsc       = "${BSC_RPC_HTTP}"
-bsc_test  = "${BSC_TESTNET_RPC_HTTP}"
+bsc       = "https://bsc-dataseed.binance.org"
+bsc_test  = "https://data-seed-prebsc-1-s1.binance.org:8545"
 
 # Etherscan v2 multi-chain verification (single API key, key in ETHERSCAN_API_KEY).
 # Etherscan v2 supports BSC (56), Polygon (137), Ethereum (1), etc. through one

@@ -1,6 +1,6 @@
 # btcbot smart contracts
 
-On-chain contracts for [btcbot.io](https://btcbot.io), a non-custodial Bitcoin trading bot on BNB Smart Chain. This repository contains every contract users interact with, their full Foundry test suite, the deploy scripts, and the audit artifacts.
+On-chain contracts for [btcbot.io](https://btcbot.io), a non-custodial Bitcoin trading bot deployed and live on **BNB Smart Chain** (BSC mainnet, chain id 56). This repository contains every contract users interact with, their full Foundry test suite, the deploy scripts, and the audit artifacts.
 
 **See it live without signing up: [btcbot.io/demo](https://btcbot.io/demo)** shows a real account with every trade verifiable on BscScan.
 
