@@ -138,6 +138,5 @@ mirrors `DeployDuplex.s.sol` + the two feed args). USDT on BSC is **18 decimals*
 
 ## 8. Engagement notes
 
-Scale: ~720 LoC, mid complexity, single contract, ~$12k of user funds today (public launch
-ahead). We will freeze the commit (`v2-audit-rc1` tag) before kickoff and apply fixes on a
+Scale: ~720 LoC, mid complexity, single contract. We will freeze the commit (`v2-audit-rc1` tag) before kickoff and apply fixes on a
 branch for your re-review. Happy to walk through the design on a call.

@@ -2,7 +2,7 @@
 
 Contract is at the latest commit (see git log); **53/53 tests pass** + **BSC-fork test 4/4 green**
 on live infra, `forge build` clean, slither **0 high/medium on V2** (residual findings are
-accepted FPs, see below). Re-submit this doc + the updated `BtcbotRouterV2.sol` + `BtcbotRouterV2.t.sol`.
+accepted FPs, see below).
 
 ## Round 5 — external ChatGPT + Gemini audits (current build)
 
@@ -90,11 +90,3 @@ No other high/medium on V2 — `divide-before-multiply` was eliminated in round 
 instances are in the out-of-scope legacy routers). (`arbitrary-send-erc20` on the `user` param is
 accepted — `onlyTrader` + the user's own approval + the signed mandate; identical to the Uniswap
 router pattern.)
-
-## Suggested re-review prompt
-> Here is BtcbotRouterV2.sol after fixing your previous findings (see AUDIT_FIXES_V2.md).
-> Verify each fix is correct and complete (especially H-01 cumulative accounting incl. the
-> reset-on-register and the batch per-leg consume; M-01 nonce monotonicity; M-02 strict batch
-> slippage; L-03 dual-feed floor decimals). Confirm no new issues were introduced. Be
-> adversarial. The reentrancy-no-eth on the batch is a documented false-positive (nonReentrant
-> + hookless tokens) — challenge it only if you can show a concrete exploit.

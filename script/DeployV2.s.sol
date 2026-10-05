@@ -6,8 +6,8 @@ import {BtcbotRouterV2} from "../src/BtcbotRouterV2.sol";
 
 /// @title DeployV2 — deploy BtcbotRouterV2 (oracle floor + EIP-712 session mandate + on-chain
 ///        commission tree + 48h setSwapRouter timelock) to BSC mainnet.
-/// @notice Successor of BtcbotRouterDuplex (0x581bfa…). The Blockaid-"trusted" / public-launch
-///         router. Constructor now takes **8 args** (two Chainlink feeds added). The contract
+/// @notice Successor of BtcbotRouterDuplex (0x581bfa…). The public-launch router.
+///         Constructor now takes **8 args** (two Chainlink feeds added). The contract
 ///         ships PAUSED from its own constructor (no setPaused needed at deploy). A new address
 ///         ⇒ a one-time user re-approval AND a one-time mandate signature (the 4th migration).
 ///
@@ -22,13 +22,12 @@ import {BtcbotRouterV2} from "../src/BtcbotRouterV2.sol";
 ///   1. forge script DeployV2 --rpc-url bsc --private-key $DEPLOYER_PRIVATE_KEY \
 ///        --broadcast --verify        → deploys PAUSED; logs + sanity-checks all 8 args + feeds.
 ///   2. BscScan verify; sanity-check the logged constructor args + the two Chainlink feeds.
-///   3. Blockaid: this is the contract that should earn the "trusted" badge (ships with all their
-///      required changes). Submit the slither report + dossier + the AUDIT_FIXES_V2 changelog.
+///   3. Share the Slither report and the AUDIT_FIXES_V2 changelog with security reviewers.
 ///   4. transferOwnership(0x94eDfB COLD) from the deployer key, then acceptOwnership from the
 ///      Ledger (fund the cold wallet with a little BNB first). Owner now COLD.
 ///   5. setUplines(user, [t1..t5]) for each user from the Ledger — mirror the off-chain
 ///      `referrals` table (recipients are now ON-CHAIN, not relayer-passed). Vacant => root.
-///   6. Users: re-approve (Permit2, time-bounded) + sign + register an EIP-712 mandate (FE).
+///   6. Users: re-approve (bounded ERC20 approval) + sign + register an EIP-712 mandate (FE).
 ///   7. Canary: setPaused(false) from the Ledger; point the trader at the new address for
 ///      yourself + 1 friend; low-value smoke SELL/BUY + a 2-leg batch → verify per-user fills
 ///      + conservation (the fork test already proved this against live infra).
@@ -94,9 +93,9 @@ contract DeployV2 is Script {
         console.log("");
         console.log(">>> BtcbotRouterV2 deployed at:", address(router));
         console.log("    paused      :", router.paused());
-        console.log("    NEXT: BscScan verify -> Blockaid 'trusted' submission ->");
+        console.log("    NEXT: BscScan verify -> security review ->");
         console.log("          transferOwnership(COLD) + acceptOwnership(Ledger) ->");
         console.log("          setUplines(user,[t1..t5]) per user (mirror referrals table) ->");
-        console.log("          users re-approve (Permit2) + sign a mandate -> unpause -> canary -> all.");
+        console.log("          users re-approve + sign a mandate -> unpause -> canary -> all.");
     }
 }

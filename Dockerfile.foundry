@@ -20,7 +20,6 @@ RUN git config --global user.email "ci@btcbot.io" \
     && git init --quiet . \
     && forge install foundry-rs/forge-std@v1.9.4 \
     && forge install OpenZeppelin/openzeppelin-contracts@v5.0.2 \
-    && forge install Uniswap/permit2 \
     && cp -r lib /tmp/forge-libs \
     && rm -rf /tmp/setup
 

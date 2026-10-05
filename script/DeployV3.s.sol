@@ -4,37 +4,25 @@ pragma solidity ^0.8.24;
 import {Script, console} from "forge-std/Script.sol";
 import {BtcbotRouterV3} from "../src/BtcbotRouterV3.sol";
 
-/// @title DeployV3 — deploy BtcbotRouterV3 (oracle floor + EIP-712 session mandate + on-chain
-///        commission tree + 48h setSwapRouter timelock) to BSC mainnet.
-/// @notice Successor of BtcbotRouterV2 (0xaCa5F1…, the Blockaid-trusted router). V3 delta:
-///         failed batch settlements become USER-CLAIMABLE (claimStranded, permissionless)
-///         and rescueToken is barred from the stranded pool (DappBay fix, 2026-08-25). Constructor now takes **8 args** (two Chainlink feeds added). The contract
-///         ships PAUSED from its own constructor (no setPaused needed at deploy). A new address
-///         ⇒ a one-time user re-approval AND a one-time mandate signature (the 4th migration).
+/// @title DeployV3: deploys BtcbotRouterV3 (oracle floor, EIP-712 session mandate, on-chain
+///        commission tree, 48h swap-router timelock) to BSC mainnet.
+/// @notice Successor of BtcbotRouterV2 (0xaCa5F1…). V3 delta: a failed batch settlement is recorded
+///         as owed to the user and anyone can deliver it (`claimStranded`); `rescueToken` cannot touch
+///         those amounts. Constructor takes 8 args; the contract ships PAUSED from its constructor.
+///         Live deployment: 0x600D173c359DB44aFef10b38cA2D7Cad0A320b28 (2026-08-26).
 ///
-/// ⚠️ ROLES (post key-split, same as Duplex):
-///   - trader = TRADER_WALLET_ADDRESS = HOT bot 0x093eAa… (only swap caller; no custody)
-///   - root   = FOUNDER_WALLET = 0x032c18… (commission root + fan-out fallback recipient)
-///   - owner  = DEPLOYER at deploy, then transferred to the COLD Ledger 0x94eDfB… (2-step)
+/// Roles:
+///   - trader = TRADER_WALLET_ADDRESS: the hot bot key, only caller of the swap functions, no custody.
+///   - root   = FOUNDER_WALLET: commission root and fan-out fallback recipient.
+///   - owner  = ROUTER_OWNER_ADDRESS, set in the constructor. For the live deployment this was the
+///              cold hardware wallet 0x94eDfB…, so there was never a hot-key ownership window.
 ///
-/// GO-LIVE PROCEDURE (operator runs each step; deploy = your key + your gas):
-///   0. env: TRADER_WALLET_ADDRESS=0x093eAa…, FOUNDER_WALLET=0x032c18…
-///      Deploy with a key whose address you'll set as owner (then transfer to cold).
-///   0-bis. BLOCKAID FIRST: send docs/blockaid_v3_outreach_draft.md (pre-deploy heads-up).
-///   1. forge script DeployV3 --rpc-url bsc --private-key $DEPLOYER_PRIVATE_KEY \
-///        --broadcast --verify        → deploys PAUSED; logs + sanity-checks all 8 args + feeds.
-///   2. BscScan verify; sanity-check the logged constructor args + the two Chainlink feeds.
-///   3. Blockaid: this is the contract that should earn the "trusted" badge (ships with all their
-///      required changes). Submit the slither report + dossier + the AUDIT_FIXES_V2 changelog.
-///   4. transferOwnership(0x94eDfB COLD) from the deployer key, then acceptOwnership from the
-///      Ledger (fund the cold wallet with a little BNB first). Owner now COLD.
-///   5. setUplines(user, [t1..t5]) for each user from the Ledger — mirror the off-chain
-///      `referrals` table (recipients are now ON-CHAIN, not relayer-passed). Vacant => root.
-///   6. Users: re-approve (Permit2, time-bounded) + sign + register an EIP-712 mandate (FE).
-///   7. Canary: setPaused(false) from the Ledger; point the trader at the new address for
-///      yourself + 1 friend; low-value smoke SELL/BUY + a 2-leg batch → verify per-user fills
-///      + conservation (the fork test already proved this against live infra).
-///   8. If clean: open to all (FE banner), flip the trader's MIGRATION_TARGET_ROUTER to V2.
+/// Usage:
+///   forge script script/DeployV3.s.sol --rpc-url bsc --broadcast --verify
+///   The script logs the 8 constructor args and reverts if a post-deploy sanity check fails.
+///   Then, from the owner: setUplines per user (referral recipients are on-chain), unpause after
+///   a low-value canary. Users re-approve the new address (bounded ERC20 approval) and sign a
+///   mandate in the dashboard.
 contract DeployV3 is Script {
     // BSC mainnet (chainid 56) — MUST match the live routers' immutables.
     address constant BTCB_BSC = 0x7130d2A12B9BCbFAe4f2634d864A1Ee1Ce3Ead9c;
@@ -69,7 +57,7 @@ contract DeployV3 is Script {
         console.log("    Pancake V3  :", PANCAKE_V3_ROUTER_BSC);
         console.log("    trader (hot):", trader);
         console.log("    root (fndr) :", rootAddr);
-        console.log("    owner       :", ownerAddr, "(transfer to COLD 0x94eDfB after deploy)");
+        console.log("    owner       :", ownerAddr, "(set at construction)");
         console.log("    BTC/USD feed:", BTC_USD_FEED_BSC);
         console.log("    USDT/USD fd :", USDT_USD_FEED_BSC);
         console.log("==================================================");
@@ -96,9 +84,7 @@ contract DeployV3 is Script {
         console.log("");
         console.log(">>> BtcbotRouterV3 deployed at:", address(router));
         console.log("    paused      :", router.paused());
-        console.log("    NEXT: BscScan verify -> Blockaid 'trusted' submission ->");
-        console.log("          transferOwnership(COLD) + acceptOwnership(Ledger) ->");
-        console.log("          setUplines(user,[t1..t5]) per user (mirror referrals table) ->");
-        console.log("          users re-approve (Permit2) + sign a mandate -> unpause -> canary -> all.");
+        console.log("    NEXT: BscScan verify -> setUplines per user (owner) ->");
+        console.log("          canary + unpause (owner) -> users re-approve + sign a mandate.");
     }
 }

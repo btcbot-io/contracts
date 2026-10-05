@@ -13,7 +13,7 @@ verbosity = 2
 gas_reports = ["BtcbotRouter"]
 
 # BNB Smart Chain endpoints — BSC mainnet (chain id 56) is the deployment target;
-# fork tests run against real PancakeSwap + Permit2 on BSC. Public nodes by default
+# fork tests run against real PancakeSwap and Chainlink on BSC. Public nodes by default
 # so the repo builds standalone; override per-run with --rpc-url/--fork-url if needed.
 [profile.default.rpc_endpoints]
 bsc       = "https://bsc-dataseed.binance.org"
